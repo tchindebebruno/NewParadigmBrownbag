@@ -1,0 +1,16 @@
+services:
+  subs-manager.mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ConnectionString_Postgres: Host=${PG_HOST};Port=5432;Database=${PG_DB};Username=${PG_USER};Password=${PG_PASSWORD}
+    networks:
+      - host
+
+networks:
+  host:
+    driver: bridge
+
+stdin_open: true
+tty: true

@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY SubsManager.sln ./
+COPY SubsManager.Domain/*.csproj SubsManager.Domain/
+COPY SubsManager.Application/*.csproj SubsManager.Application/
+COPY SubsManager.Infrastructure/*.csproj SubsManager.Infrastructure/
+COPY SubsManager.Mcp/*.csproj SubsManager.Mcp/
+RUN dotnet restore SubsManager.sln
+COPY . .
+RUN dotnet publish SubsManager.Mcp/SubsManager.Mcp.csproj -c Debug -o /app/publish -p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0
+WORKDIR /app
+ENV TZ=Indian/Mauritius
+COPY --from=build /app/publish ./
+ENTRYPOINT ["dotnet","SubsManager.Mcp.dll"]

@@ -1,0 +1,136 @@
+# ===============================
+# .NET / C# Solution - GitIgnore
+# ===============================
+
+## Build outputs
+bin/
+obj/
+out/
+artifacts/
+
+## User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / VSCode / VS
+.idea/
+.vs/
+.vscode/
+*.DotSettings.user
+
+## Logs & diagnostics
+*.log
+logs/
+*.etl
+*.pdb
+*.mdb
+TestResult*/
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+## Package management
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+*.lock.json
+project.lock.json
+
+# NuGet tool local feed (on garde les artefacts .nupkg si tu veux)
+!artifacts/
+artifacts/*
+!artifacts/nupkg/
+artifacts/nupkg/*.nupkg
+
+## Configuration & secrets
+appsettings.Development.json
+appsettings.Local.json
+*.env
+.env
+.env.*
+
+# Sensitive overrides
+secrets.json
+secret.*
+*.key
+*.pem
+
+## OS-specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+## Docker / Containers
+*.pid
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+# optional: ignore images / mounts
+tmp/
+mnt/
+data/
+volumes/
+
+## Build / publish / deployment
+publish/
+*.publish.xml
+*.pubxml
+*.pubxml.user
+*.deploy.cmd
+*.deploy-readme.txt
+*.PublishProfiles/
+
+## MCP / Agent Framework generated data
+.mcp_cache/
+.mcp_logs/
+*.agentstate
+*.session.json
+
+## EF Core / Migrations (facultatif : garde si tu veux versionner)
+#migrations/
+#Migrations/
+
+## JetBrains / Resharper
+_ReSharper*/
+*.DotSettings
+
+## Tests & reports
+*.trx
+*.testlog
+coverage*.json
+lcov.info
+.coverage
+.coveragexml
+
+## Temporary files
+*.tmp
+*.temp
+~$*
+*.bak
+*.orig
+*.rej
+
+## SQLite / Local DB files
+*.db
+*.sqlite
+*.sqlite3
+
+## Python / Node (si agents secondaires)
+__pycache__/
+node_modules/
+dist/
+
+## Local scripts / binaries
+scripts/local/
+tools/local/
+*.sh~
+*.cmd~
+
+buildMcp

@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -680,
+        -100
+      ],
+      "id": "0751857a-8ece-467b-a85d-7ac88f7d8480",
+      "name": "When chat message received",
+      "webhookId": "cc9fbba6-adc8-417f-8bcc-552dfdefd915"
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Role & Style\nYou are Mamadou AI, a reliable and concise agent. Respond in French by default, short, precise, actionable (≤ 3 sentences or list ≤ 5 items).\n\nHandling Uncertainty\nIf the request is vague, ask one clarifying question at a time: “To be precise: … ?”\n\nActions & Tools\nDo nothing risky without confirmation. Briefly mention any tool used (1 line max).\n\nGet Users: use when the user requests info about a user (name, email, ID, etc.).\n\nUTC Time: to get the current time.\n\nUser names: whenever a user mentions a name, assume it refers to a user. Check Get Users to provide info. Example: “I want John Cena’s email” → retrieve from Get Users.\nPostgres: In the database, there are the tables \"Users\", \"Services\", \"Plans\", and \"Subscriptions\".\nFormat\nNumbered steps only if requested. No future promises; handle everything in the current response.\n\nLanguage\nRespond in French unless the request is in another language."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        -100
+      ],
+      "id": "ec7e5a5d-beca-4163-bb29-068ae4a58352",
+      "name": "AI Agent",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "notes": "Tu es Johny. Un agent AI efficace."
+    },
+    {
+      "parameters": {
+        "toolDescription": "Name: Time & Geo Context\nDescription:\nReturns current time data and lightweight geo context. Use it to (1) determine “now”, (2) resolve time zones, offsets, and formatting needs, and (3) optionally infer coarse location context (continent/country/city) when explicitly relevant.\n\nInput: none (or an optional timezone hint).\nOutput (example fields):\n\ntimezone, timezone_offset, date, date_time, date_time_ymd, date_time_unix, time_24, time_12, week, month, year, current_tz_abbreviation, is_dst, …\n\ngeo: continent_code/name, country_code2/3, country_name(_official), state_prov, state_code, city, latitude, longitude, …\n\nUsage rules:\n\nPrimary use: figure out the current time and whether the user means “now”.\n\nLanguage/format: return time in the user’s language and format preferences; include timezone (e.g., Indian/Mauritius, UTC+04:00) when helpful.\n\nMinimal disclosure: do not reveal detailed geo fields (city/coordinates) unless the user explicitly asks or it is essential to the task. Prefer timezone + offset.\n\nNo overreach: if the request is vague, ask one clarifying question before using location-specific fields.\n\nPrivacy: never infer or store precise location; use the provided fields only for formatting/offset conversion.\n\nDeterministic output: do not promise future updates; answer with the data from the current call only.\n\nExamples:\n\nUser: “What time is it for me right now?” → Use timezone, time_24, date; reply briefly with local time and TZ.\n\nUser: “Convert 15:30 UTC to my time.” → Read timezone_offset, compute 19:30 for UTC+04:00, state result.\n\nUser: “Where am I exactly?” → Decline precise disclosure; offer coarse info only if explicitly requested.",
+        "url": "https://api.ipgeolocation.io/timezone?apiKey=843f55a33a4a48ecb81400fe5b36d3d1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -220,
+        120
+      ],
+      "id": "f56fd02e-d51a-4115-8796-3f0ac18aca17",
+      "name": "Get Time & Geo Context",
+      "retryOnFail": false,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "qwen2:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        500
+      ],
+      "id": "ac3833e0-cb6b-4397-9f7e-942e5b697993",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "cSsvnrZxqkvMGe9K",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -460,
+        120
+      ],
+      "id": "20a0d4ce-58a2-4613-963c-bbc3296aba36",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "9FXhsRL2Hlubna0t",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -340,
+        120
+      ],
+      "id": "c8d4113b-a5d2-442f-b30e-6e550711097e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://localhost:5000/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        120
+      ],
+      "id": "fb7e75e2-41eb-467d-b8ed-dbfe05488add",
+      "name": "SubsManager"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table', ``, 'string') }}",
+          "mode": "name"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        -680,
+        260
+      ],
+      "id": "68bca901-4924-402e-b7cd-9707083965cb",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "nvcFfC8iWuP56Lbi",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Time & Geo Context": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SubsManager": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "ai_tool": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3b31d37a030ad87702485cfb6177083a293c1604cdbef3d11f1b591bb811adce"
+  }
+}

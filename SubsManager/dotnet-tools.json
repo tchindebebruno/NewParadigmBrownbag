@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "subsmanager.mcp": {
+      "version": "0.1.1",
+      "commands": [
+        "subsmanager-mcp"
+      ],
+      "rollForward": false
+    }
+  }
+}

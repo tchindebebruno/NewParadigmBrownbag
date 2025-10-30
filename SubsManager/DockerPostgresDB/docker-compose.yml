@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres
+    container_name: subs-postgres
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${PG_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - subs_pg_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    networks:
+      - host
+  # mcp:
+  #   image: crystaldba/postgres-mcp:latest
+  #   container_name: subs_postgres_mcp
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DATABASE_URI: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}"
+  #     ACCESS_MODE: "unrestricted"  # ou "restricted" pour prod
+  #   ports:
+  #     - "8000:8000"
+  #   command: >
+  #     --access-mode=unrestricted
+  #     --transport=sse
+  #   networks:
+  #     - host
+
+  # pgadmin:
+  #   image: dpage/pgadmin4:8.13
+  #   container_name: subs-pgadmin
+  #   restart: unless-stopped
+  #   env_file: .env
+  #   ports:
+  #     - "${PGADMIN_PORT:-5050}:80"
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - subsnet
+
+networks:
+  host:
+    driver: bridge
+
+volumes:
+  subs_pg_data:
+    driver: local

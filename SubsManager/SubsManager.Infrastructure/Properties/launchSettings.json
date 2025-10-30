@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SubsManager.Infrastructure": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings_Postgres": "Host=127.0.0.1;Port=5432;Database=subs_mgr;Username=subs_user;Password=subs_pw"
+      }
+    }
+  }
+}

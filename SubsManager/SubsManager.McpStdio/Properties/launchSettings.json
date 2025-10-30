@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SubsManager.McpStdio": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "POSTGRES_CONNECTION_STRINGS": "Host=localhost;Database=subs_mgr;Username=subs_user;Password=subs_pw"
+      }
+    }
+  }
+}
