@@ -4,6 +4,11 @@
 
 Ce dépôt illustre la mise en œuvre d’un **paradigme orienté agent** pour le développement d’applications prompt-driven.
 
+Mon article ci-dessous évoque la première partie de la présentation 
+
+[Et si le rôle du développeur n’était plus d’écrire du code mais d’orchestrer des intelligences ?](https://medium.com/@tchindebebruno/et-si-le-role-du-d%C3%A9veloppeur-netait-plus-d-%C3%A9crire-du-code-mais-d-orchestrer-des-intelligences-2b9943225ac5)
+
+
 ## **Contenu du dépôt**
 
 - **`n8n.json`**  
